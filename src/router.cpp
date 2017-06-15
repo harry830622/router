@@ -47,7 +47,7 @@ void Router::ConstructSpanningGraph() {
     R1.insert(make_pair(current_pin_x, current_pin_id));
     R2.insert(make_pair(current_pin_y, current_pin_id));
 
-    for (auto it = R1.find(current_pin_x); it != R1.end(); ++it) {
+    for (auto it = R1.lower_bound(current_pin_x); it != R1.end();) {
       const int pin_id = it->second;
       if (pin_id != current_pin_id) {
         const Pin& pin = database_.pin(pin_id);
@@ -59,13 +59,14 @@ void Router::ConstructSpanningGraph() {
               Point::ManhattanDistance(pin.coordinates(),
                                        current_pin.coordinates()));
           it = R1.erase(it);
-          --it;
         } else {
           break;
         }
+      } else {
+        ++it;
       }
     }
-    for (auto it = R2.upper_bound(current_pin_y); it != R2.end(); ++it) {
+    for (auto it = R2.upper_bound(current_pin_y); it != R2.end();) {
       const int pin_id = it->second;
       if (pin_id != current_pin_id) {
         const Pin& pin = database_.pin(pin_id);
@@ -77,10 +78,11 @@ void Router::ConstructSpanningGraph() {
               Point::ManhattanDistance(pin.coordinates(),
                                        current_pin.coordinates()));
           it = R2.erase(it);
-          --it;
         } else {
           break;
         }
+      } else {
+        ++it;
       }
     }
   }
@@ -103,7 +105,7 @@ void Router::ConstructSpanningGraph() {
     R3.insert(make_pair(current_pin_y, current_pin_id));
     R4.insert(make_pair(current_pin_x, current_pin_id));
 
-    for (auto it = R3.find(current_pin_y); it != R3.end(); ++it) {
+    for (auto it = R3.lower_bound(current_pin_y); it != R3.end();) {
       const int pin_id = it->second;
       if (pin_id != current_pin_id) {
         const Pin& pin = database_.pin(pin_id);
@@ -115,13 +117,14 @@ void Router::ConstructSpanningGraph() {
               Point::ManhattanDistance(pin.coordinates(),
                                        current_pin.coordinates()));
           it = R3.erase(it);
-          --it;
         } else {
           break;
         }
+      } else {
+        ++it;
       }
     }
-    for (auto it = R4.upper_bound(current_pin_x); it != R4.end(); ++it) {
+    for (auto it = R4.upper_bound(current_pin_x); it != R4.end();) {
       const int pin_id = it->second;
       if (pin_id != current_pin_id) {
         const Pin& pin = database_.pin(pin_id);
@@ -133,10 +136,11 @@ void Router::ConstructSpanningGraph() {
               Point::ManhattanDistance(pin.coordinates(),
                                        current_pin.coordinates()));
           it = R4.erase(it);
-          --it;
         } else {
           break;
         }
+      } else {
+        ++it;
       }
     }
   }

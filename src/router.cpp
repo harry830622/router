@@ -1,21 +1,34 @@
 #include "router.hpp"
 
+#include <boost/pending/disjoint_sets.hpp>
+
 #include <algorithm>
 #include <map>
 
 using namespace std;
 
+using DisjointSet = boost::disjoint_sets<int*, int*>;
+
 auto larger = [](int x, int y) { return x > y; };
 using reverse_multimap = multimap<int, int, decltype(larger)>;
 
 Router::Router(Database& database)
-    : database_(database), spanning_graph_(database_.num_pins()) {}
+    : database_(database),
+      spanning_graph_(database_.num_pins()),
+      minimum_spanning_tree_(database_.num_pins()) {}
 
 void Router::DrawSpanningGraph(ostream& os) const {
   spanning_graph_.Draw(os, database_);
 }
 
-void Router::Run() { ConstructSpanningGraph(); }
+void Router::DrawMinimumSpanningTree(ostream& os) const {
+  minimum_spanning_tree_.Draw(os, database_);
+}
+
+void Router::Run() {
+  ConstructSpanningGraph();
+  ConstructMinimumSpanningTree();
+}
 
 // private
 
@@ -39,7 +52,7 @@ void Router::ConstructSpanningGraph() {
 
   reverse_multimap R1(larger);
   reverse_multimap R2(larger);
-  for (int current_pin_id : sorted_pin_ids) {
+  for (const int current_pin_id : sorted_pin_ids) {
     const Pin& current_pin = database_.pin(current_pin_id);
     const int current_pin_x = current_pin.x();
     const int current_pin_y = current_pin.y();
@@ -97,7 +110,7 @@ void Router::ConstructSpanningGraph() {
 
   multimap<int, int> R3;
   reverse_multimap R4(larger);
-  for (int current_pin_id : sorted_pin_ids) {
+  for (const int current_pin_id : sorted_pin_ids) {
     const Pin& current_pin = database_.pin(current_pin_id);
     const int current_pin_x = current_pin.x();
     const int current_pin_y = current_pin.y();
@@ -142,6 +155,44 @@ void Router::ConstructSpanningGraph() {
       } else {
         ++it;
       }
+    }
+  }
+}
+
+void Router::ConstructMinimumSpanningTree() {
+  const int num_edges = spanning_graph_.num_edges();
+
+  vector<int> sorted_edge_ids;
+  sorted_edge_ids.reserve(num_edges);
+  for (int i = 0; i < num_edges; ++i) {
+    const int id = i;
+    sorted_edge_ids.push_back(id);
+  }
+
+  sort(sorted_edge_ids.begin(), sorted_edge_ids.end(),
+       [&](int edge_a_id, int edge_b_id) {
+         const Edge& edge_a = spanning_graph_.edge(edge_a_id);
+         const Edge& edge_b = spanning_graph_.edge(edge_b_id);
+         return edge_a.cost() < edge_b.cost();
+       });
+
+  vector<int> ranks(num_edges);
+  vector<int> parents(num_edges);
+  DisjointSet disjoint_set(&ranks[0], &parents[0]);
+  for (const int edge_id : sorted_edge_ids) {
+    disjoint_set.make_set(edge_id);
+  }
+
+  for (const int current_edge_id : sorted_edge_ids) {
+    const Edge& current_edge = spanning_graph_.edge(current_edge_id);
+    const int vertex_a_id = current_edge.vertex_a_id();
+    const int vertex_b_id = current_edge.vertex_b_id();
+    const int set_a = disjoint_set.find_set(vertex_a_id);
+    const int set_b = disjoint_set.find_set(vertex_b_id);
+    if (set_a != set_b) {
+      minimum_spanning_tree_.AddEdge(vertex_a_id, vertex_b_id,
+                                     current_edge.cost());
+      disjoint_set.link(vertex_a_id, vertex_b_id);
     }
   }
 }

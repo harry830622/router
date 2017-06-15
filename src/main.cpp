@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
   // clang-format off
   options.add_options()
     ("help,h", "Print help messages")
-    ("draw-spanning-graph", po::value<string>()->value_name("FILE"), "Draw spanning graph")
+    ("draw-spanning-graph,g", po::value<string>()->value_name("FILE"), "Draw spanning graph")
+    ("draw-minimum-spanning-tree,t", po::value<string>()->value_name("FILE"), "Draw minimum spanning tree")
     ("input", po::value<string>()->value_name("FILE")->required(), "Input")
     ("output", po::value<string>()->value_name("FILE")->required(), "Output")
     ;
@@ -52,6 +53,11 @@ int main(int argc, char *argv[]) {
   if (arguments.count("draw-spanning-graph")) {
     ofstream plot(arguments["draw-spanning-graph"].as<string>());
     router.DrawSpanningGraph(plot);
+  }
+
+  if (arguments.count("draw-minimum-spanning-tree")) {
+    ofstream plot(arguments["draw-minimum-spanning-tree"].as<string>());
+    router.DrawMinimumSpanningTree(plot);
   }
 
   return 0;

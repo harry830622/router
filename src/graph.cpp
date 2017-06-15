@@ -13,12 +13,12 @@ const Vertex& Graph::vertex(int id) const { return vertices_.at(id); }
 const Edge& Graph::edge(int id) const { return edges_.at(id); }
 
 void Graph::Draw(std::ostream& os, const Database& database) const {
-  os << "set title 'Spanning Graph'" << endl;
+  os << "set title 'Graph'" << endl;
   os << "set xrange[" << database.outline_lower_left().x() << ":"
      << database.outline_upper_right().x() << "]" << endl;
   os << "set yrange[" << database.outline_lower_left().y() << ":"
      << database.outline_upper_right().y() << "]" << endl;
-  os << "set style line 1 lt 1 lc rgb 'black' lw 1 pt 1 ps 2" << endl;
+  os << "set style line 1 lt 1 lc rgb 'black' lw 1 pt 2 ps 1" << endl;
   os << "unset key" << endl;
 
   os << "plot '-' w lp ls 1" << endl;

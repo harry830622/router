@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
     ("help,h", "Print help messages")
     ("draw-spanning-graph,g", po::value<string>()->value_name("FILE"), "Draw spanning graph")
     ("draw-minimum-spanning-tree,t", po::value<string>()->value_name("FILE"), "Draw minimum spanning tree")
+    ("draw-rectilinear-minimum-spanning-tree,r", po::value<string>()->value_name("FILE"), "Draw rectilinear minimum spanning tree")
     ("input", po::value<string>()->value_name("FILE")->required(), "Input")
     ("output", po::value<string>()->value_name("FILE")->required(), "Output")
     ;
@@ -41,7 +42,6 @@ int main(int argc, char *argv[]) {
   }
 
   const string input_name = arguments["input"].as<string>();
-
   ifstream input(input_name);
 
   Database database(input);
@@ -49,6 +49,10 @@ int main(int argc, char *argv[]) {
 
   Router router(database);
   router.Run();
+
+  const string output_name = arguments["output"].as<string>();
+  ofstream output(output_name);
+  router.Output(output);
 
   if (arguments.count("draw-spanning-graph")) {
     ofstream plot(arguments["draw-spanning-graph"].as<string>());
@@ -60,5 +64,10 @@ int main(int argc, char *argv[]) {
     router.DrawMinimumSpanningTree(plot);
   }
 
+  if (arguments.count("draw-rectilinear-minimum-spanning-tree")) {
+    ofstream plot(
+        arguments["draw-rectilinear-minimum-spanning-tree"].as<string>());
+    router.DrawRectilinearMinimumSpanningTree(plot);
+  }
   return 0;
 }

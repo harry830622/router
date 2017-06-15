@@ -6,11 +6,14 @@
 !_TAG_PROGRAM_VERSION	5.8	//
 AddEdge	graph.cpp	/^void Graph::AddEdge(int vertex_a_id, int vertex_b_id, int cost) {$/;"	f	class:Graph
 ConnectEdge	vertex.cpp	/^void Vertex::ConnectEdge(int edge_id) { edge_ids_.push_back(edge_id); }$/;"	f	class:Vertex
+ConstructMinimumSpanningTree	router.cpp	/^void Router::ConstructMinimumSpanningTree() {$/;"	f	class:Router
 ConstructSpanningGraph	router.cpp	/^void Router::ConstructSpanningGraph() {$/;"	f	class:Router
 DATABASE_HPP	database.hpp	2;"	d
 Database	database.cpp	/^Database::Database(istream& input)$/;"	f	class:Database
 Database	database.hpp	/^class Database {$/;"	c
 Draw	graph.cpp	/^void Graph::Draw(std::ostream& os, const Database& database) const {$/;"	f	class:Graph
+DrawMinimumSpanningTree	router.cpp	/^void Router::DrawMinimumSpanningTree(ostream& os) const {$/;"	f	class:Router
+DrawRectilinearMinimumSpanningTree	router.cpp	/^void Router::DrawRectilinearMinimumSpanningTree(ostream& os) const {$/;"	f	class:Router
 DrawSpanningGraph	router.cpp	/^void Router::DrawSpanningGraph(ostream& os) const {$/;"	f	class:Router
 EDGE_HPP	edge.hpp	2;"	d
 Edge	edge.cpp	/^Edge::Edge(int vertex_a_id, int vertex_b_id, int cost)$/;"	f	class:Edge
@@ -19,7 +22,11 @@ GRAPH_HPP	graph.hpp	2;"	d
 Graph	graph.cpp	/^Graph::Graph(int num_vertices) : vertices_(num_vertices) {}$/;"	f	class:Graph
 Graph	graph.hpp	/^class Graph {$/;"	c
 IsDelimiter	simple_parser.hpp	/^  bool IsDelimiter(char c) { return delimiters_.find(c) != std::string::npos; }$/;"	f	class:simple_parser::Parser
+LINE_HPP	line.hpp	2;"	d
+Line	line.cpp	/^Line::Line(const Point& end_point_a, const Point& end_point_b)$/;"	f	class:Line
+Line	line.hpp	/^class Line {$/;"	c
 ManhattanDistance	point.cpp	/^int Point::ManhattanDistance(const Point& point_a, const Point& point_b) {$/;"	f	class:Point
+Output	router.cpp	/^void Router::Output(ostream& os) const {$/;"	f	class:Router
 PIN_HPP	pin.hpp	2;"	d
 POINT_HPP	point.hpp	2;"	d
 Parse	database.cpp	/^void Database::Parse(istream& input) {$/;"	f	class:Database
@@ -31,12 +38,14 @@ Pin	pin.hpp	/^class Pin {$/;"	c
 Point	point.cpp	/^Point::Point(int x, int y) : x_(x), y_(y) {}$/;"	f	class:Point
 Point	point.hpp	/^class Point {$/;"	c
 Print	database.cpp	/^void Database::Print(ostream& os, int indent_level) const {$/;"	f	class:Database
+Print	line.cpp	/^void Line::Print(std::ostream& os, int indent_level) const {$/;"	f	class:Line
 Print	pin.cpp	/^void Pin::Print(ostream& os, int indent_level) const {$/;"	f	class:Pin
 Print	point.cpp	/^void Point::Print(ostream& os, int indent_level) const {$/;"	f	class:Point
 ROUTER_HPP	router.hpp	2;"	d
+RectilinearizeMinimumSpanningTree	router.cpp	/^void Router::RectilinearizeMinimumSpanningTree() {$/;"	f	class:Router
 Router	router.cpp	/^Router::Router(Database& database)$/;"	f	class:Router
 Router	router.hpp	/^class Router {$/;"	c
-Run	router.cpp	/^void Router::Run() { ConstructSpanningGraph(); }$/;"	f	class:Router
+Run	router.cpp	/^void Router::Run() {$/;"	f	class:Router
 SIMPLE_PARSER_HPP	simple_parser.hpp	2;"	d
 Tokenize	simple_parser.hpp	/^  Tokens Tokenize(const std::string& str) {$/;"	f	class:simple_parser::Parser
 VERTEX_HPP	vertex.hpp	2;"	d
@@ -51,8 +60,14 @@ edge	graph.cpp	/^const Edge& Graph::edge(int id) const { return edges_.at(id); }
 edge_ids	vertex.cpp	/^const vector<int>& Vertex::edge_ids() const { return edge_ids_; }$/;"	f	class:Vertex
 edge_ids_	vertex.hpp	/^  std::vector<int> edge_ids_;$/;"	m	class:Vertex
 edges_	graph.hpp	/^  std::vector<Edge> edges_;$/;"	m	class:Graph
+end_point_a	line.cpp	/^const Point& Line::end_point_a() const { return end_point_a_; }$/;"	f	class:Line
+end_point_a_	line.hpp	/^  Point end_point_a_;$/;"	m	class:Line
+end_point_b	line.cpp	/^const Point& Line::end_point_b() const { return end_point_b_; }$/;"	f	class:Line
+end_point_b_	line.hpp	/^  Point end_point_b_;$/;"	m	class:Line
+horizontal_lines_	router.hpp	/^  std::vector<Line> horizontal_lines_;$/;"	m	class:Router
 input_	simple_parser.hpp	/^  std::istream& input_;$/;"	m	class:simple_parser::Parser
 main	main.cpp	/^int main(int argc, char *argv[]) {$/;"	f
+minimum_spanning_tree_	router.hpp	/^  Graph minimum_spanning_tree_;$/;"	m	class:Router
 name	pin.cpp	/^const string& Pin::name() const { return name_; }$/;"	f	class:Pin
 name_	pin.hpp	/^  std::string name_;$/;"	m	class:Pin
 neighbor_vertex_id	edge.cpp	/^int Edge::neighbor_vertex_id(int vertex_id) const {$/;"	f	class:Edge
@@ -73,6 +88,7 @@ vertex_a_id	edge.cpp	/^int Edge::vertex_a_id() const { return vertex_a_id_; }$/;
 vertex_a_id_	edge.hpp	/^  int vertex_a_id_;$/;"	m	class:Edge
 vertex_b_id	edge.cpp	/^int Edge::vertex_b_id() const { return vertex_b_id_; }$/;"	f	class:Edge
 vertex_b_id_	edge.hpp	/^  int vertex_b_id_;$/;"	m	class:Edge
+vertical_lines_	router.hpp	/^  std::vector<Line> vertical_lines_;$/;"	m	class:Router
 vertices_	graph.hpp	/^  std::vector<Vertex> vertices_;$/;"	m	class:Graph
 x	pin.cpp	/^int Pin::x() const { return coordinates_.x(); }$/;"	f	class:Pin
 x	point.cpp	/^int Point::x() const { return x_; }$/;"	f	class:Point

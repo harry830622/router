@@ -52,14 +52,14 @@ void Router::DrawRectilinearMinimumSpanningTree(ostream& os) const {
 
 void Router::Output(ostream& os) const {
   long long int wirelength = 0;
-  for (const Line& line : horizontal_lines_) {
-    wirelength +=
-        Point::ManhattanDistance(line.end_point_a(), line.end_point_b());
-  }
-  for (const Line& line : vertical_lines_) {
-    wirelength +=
-        Point::ManhattanDistance(line.end_point_a(), line.end_point_b());
-  }
+  /* for (const Line& line : horizontal_lines_) { */
+  /*   wirelength += */
+  /*       Point::ManhattanDistance(line.end_point_a(), line.end_point_b()); */
+  /* } */
+  /* for (const Line& line : vertical_lines_) { */
+  /*   wirelength += */
+  /*       Point::ManhattanDistance(line.end_point_a(), line.end_point_b()); */
+  /* } */
 
   os << "NumRoutedPins = " << database_.num_pins() << endl;
   os << "WireLength = " << wirelength << endl;
@@ -285,61 +285,64 @@ void Router::RectilinearizeMinimumSpanningTree() {
     }
   }
 
-  sort(horizontal_lines.begin(), horizontal_lines.end(),
-       [](const Line& line_a, const Line& line_b) {
-         return line_a.end_point_a().x() < line_b.end_point_a().x();
-       });
-  sort(vertical_lines.begin(), vertical_lines.end(),
-       [](const Line& line_a, const Line& line_b) {
-         return line_a.end_point_a().y() < line_b.end_point_a().y();
-       });
+  horizontal_lines_ = horizontal_lines;
+  vertical_lines_ = vertical_lines;
 
-  list<Line> nonoverlap_horizontal_lines(horizontal_lines.begin(),
-                                         horizontal_lines.end());
-  list<Line> nonoverlap_vertical_lines(vertical_lines.begin(),
-                                       vertical_lines.end());
-  for (auto it = nonoverlap_horizontal_lines.begin();
-       it != nonoverlap_horizontal_lines.end();) {
-    auto current_it = it;
-    const int current_x_left = current_it->end_point_a().x();
-    const int current_x_right = current_it->end_point_b().x();
-    const int current_y = current_it->end_point_a().y();
-    ++it;
-    const int next_x_left = it->end_point_a().x();
-    const int next_x_right = it->end_point_b().x();
-    const int next_y = it->end_point_a().y();
-    if (next_x_left <= current_x_right && next_y == current_y) {
-      *current_it = Line(
-          Point(current_x_left, current_y),
-          Point(next_x_right > current_x_right ? next_x_right : current_x_right,
-                current_y));
-      it = nonoverlap_horizontal_lines.erase(it);
-      --it;
-    }
-  }
-  for (auto it = nonoverlap_vertical_lines.begin();
-       it != nonoverlap_vertical_lines.end();) {
-    auto current_it = it;
-    const int current_y_lower = current_it->end_point_a().y();
-    const int current_y_upper = current_it->end_point_b().y();
-    const int current_x = current_it->end_point_a().x();
-    ++it;
-    const int next_y_lower = it->end_point_a().y();
-    const int next_y_upper = it->end_point_b().y();
-    const int next_x = it->end_point_a().x();
-    if (next_y_lower <= current_y_upper && next_x == current_x) {
-      *current_it =
-          Line(Point(current_x, current_y_lower),
-               Point(current_x,
-                     next_y_upper > current_y_upper ? next_y_upper
-                                                    : current_y_upper));
-      it = nonoverlap_vertical_lines.erase(it);
-      --it;
-    }
-  }
+  /* sort(horizontal_lines.begin(), horizontal_lines.end(), */
+  /*      [](const Line& line_a, const Line& line_b) { */
+  /*        return line_a.end_point_a().x() < line_b.end_point_a().x(); */
+  /*      }); */
+  /* sort(vertical_lines.begin(), vertical_lines.end(), */
+  /*      [](const Line& line_a, const Line& line_b) { */
+  /*        return line_a.end_point_a().y() < line_b.end_point_a().y(); */
+  /*      }); */
 
-  horizontal_lines_ = vector<Line>(nonoverlap_horizontal_lines.begin(),
-                                   nonoverlap_horizontal_lines.end());
-  vertical_lines_ = vector<Line>(nonoverlap_vertical_lines.begin(),
-                                 nonoverlap_vertical_lines.end());
+  /* list<Line> nonoverlap_horizontal_lines(horizontal_lines.begin(), */
+  /*                                        horizontal_lines.end()); */
+  /* list<Line> nonoverlap_vertical_lines(vertical_lines.begin(), */
+  /*                                      vertical_lines.end()); */
+  /* for (auto it = nonoverlap_horizontal_lines.begin(); */
+  /*      it != nonoverlap_horizontal_lines.end();) { */
+  /*   auto current_it = it; */
+  /*   const int current_x_left = current_it->end_point_a().x(); */
+  /*   const int current_x_right = current_it->end_point_b().x(); */
+  /*   const int current_y = current_it->end_point_a().y(); */
+  /*   ++it; */
+  /*   const int next_x_left = it->end_point_a().x(); */
+  /*   const int next_x_right = it->end_point_b().x(); */
+  /*   const int next_y = it->end_point_a().y(); */
+  /*   if (next_x_left <= current_x_right && next_y == current_y) { */
+  /*     *current_it = Line( */
+  /*         Point(current_x_left, current_y), */
+  /*         Point(next_x_right > current_x_right ? next_x_right : current_x_right, */
+  /*               current_y)); */
+  /*     it = nonoverlap_horizontal_lines.erase(it); */
+  /*     --it; */
+  /*   } */
+  /* } */
+  /* for (auto it = nonoverlap_vertical_lines.begin(); */
+  /*      it != nonoverlap_vertical_lines.end();) { */
+  /*   auto current_it = it; */
+  /*   const int current_y_lower = current_it->end_point_a().y(); */
+  /*   const int current_y_upper = current_it->end_point_b().y(); */
+  /*   const int current_x = current_it->end_point_a().x(); */
+  /*   ++it; */
+  /*   const int next_y_lower = it->end_point_a().y(); */
+  /*   const int next_y_upper = it->end_point_b().y(); */
+  /*   const int next_x = it->end_point_a().x(); */
+  /*   if (next_y_lower <= current_y_upper && next_x == current_x) { */
+  /*     *current_it = */
+  /*         Line(Point(current_x, current_y_lower), */
+  /*              Point(current_x, */
+  /*                    next_y_upper > current_y_upper ? next_y_upper */
+  /*                                                   : current_y_upper)); */
+  /*     it = nonoverlap_vertical_lines.erase(it); */
+  /*     --it; */
+  /*   } */
+  /* } */
+
+  /* horizontal_lines_ = vector<Line>(nonoverlap_horizontal_lines.begin(), */
+  /*                                  nonoverlap_horizontal_lines.end()); */
+  /* vertical_lines_ = vector<Line>(nonoverlap_vertical_lines.begin(), */
+  /*                                nonoverlap_vertical_lines.end()); */
 }

@@ -13,9 +13,9 @@ int main(int argc, char *argv[]) {
   // clang-format off
   options.add_options()
     ("help,h", "Print help messages")
-    ("draw-spanning-graph,g", po::value<string>()->value_name("FILE"), "Draw spanning graph")
-    ("draw-minimum-spanning-tree,t", po::value<string>()->value_name("FILE"), "Draw minimum spanning tree")
-    ("draw-rectilinear-minimum-spanning-tree,r", po::value<string>()->value_name("FILE"), "Draw rectilinear minimum spanning tree")
+    ("dsg,g", po::value<string>()->value_name("FILE"), "Draw spanning graph")
+    ("dmst,t", po::value<string>()->value_name("FILE"), "Draw minimum spanning tree")
+    ("drmst,r", po::value<string>()->value_name("FILE"), "Draw rectilinear minimum spanning tree")
     ("input", po::value<string>()->value_name("FILE")->required(), "Input")
     ("output", po::value<string>()->value_name("FILE")->required(), "Output")
     ;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
   if (arguments.count("help") || argc < 3) {
     cout << "Usage:" << endl;
-    cout << "  " << argv[0] << " [--draw-spanning-graph <file>]"
+    cout << "  " << argv[0] << " [options]"
          << " <input> <output>" << endl;
     cout << options;
     return 0;
@@ -54,20 +54,20 @@ int main(int argc, char *argv[]) {
   ofstream output(output_name);
   router.Output(output);
 
-  if (arguments.count("draw-spanning-graph")) {
-    ofstream plot(arguments["draw-spanning-graph"].as<string>());
+  if (arguments.count("dsg")) {
+    ofstream plot(arguments["dsg"].as<string>());
     router.DrawSpanningGraph(plot);
   }
 
-  if (arguments.count("draw-minimum-spanning-tree")) {
-    ofstream plot(arguments["draw-minimum-spanning-tree"].as<string>());
+  if (arguments.count("dmst")) {
+    ofstream plot(arguments["dmst"].as<string>());
     router.DrawMinimumSpanningTree(plot);
   }
 
-  if (arguments.count("draw-rectilinear-minimum-spanning-tree")) {
-    ofstream plot(
-        arguments["draw-rectilinear-minimum-spanning-tree"].as<string>());
+  if (arguments.count("drmst")) {
+    ofstream plot(arguments["drmst"].as<string>());
     router.DrawRectilinearMinimumSpanningTree(plot);
   }
+
   return 0;
 }
